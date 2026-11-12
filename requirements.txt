@@ -11,3 +11,5 @@ uvicorn
 python-multipart
 anthropic
 python-dotenv
+ftfy
+kagglehub
