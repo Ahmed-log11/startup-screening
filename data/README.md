@@ -94,7 +94,3 @@ The full definitions are in [`docs/schema.md`](../docs/schema.md).
 - **Use `founded_year` or `batch_year`, never both**, and never their difference. Rows where `founded` was filled always have equal years, which gives the fill away.
 - **`region = Other` is mixed.** It holds Canada (105 companies, 84% success) and companies with no location (94 companies, 21% success).
 - **`team_size` is approximate.** Values 11, 51, 201 and 501 are probably the lower end of size ranges such as "11-50 employees".
-
-## More detail
-
-[`docs/data_guide.md`](../docs/data_guide.md) explains each cleaning step, the EDA findings with charts, the leakage checks, training tips for both model roles, and the open decisions for the team.
