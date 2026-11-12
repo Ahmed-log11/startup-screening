@@ -59,7 +59,6 @@ y = df['label']
 | `status` | text | active / acquired / public / inactive | No. It is the answer |
 | `label` | 0/1 | The target | Target only |
 
-The full definitions are in [`docs/schema.md`](../docs/schema.md).
 
 ## The label
 
