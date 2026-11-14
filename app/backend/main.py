@@ -27,7 +27,7 @@ from app.backend.services.companies import load_companies  # noqa: E402
 app = FastAPI(title="Nawat API", version="0.1.0")
 
 # Who is allowed to call this API: the local React dev server, plus the Vercel site once it exists.
-allowed_origins = ["http://localhost:5173"]
+allowed_origins = ["http://localhost:5173", "http://127.0.0.1:5173"]
 if os.getenv("FRONTEND_URL"):
     allowed_origins.append(os.getenv("FRONTEND_URL"))
 

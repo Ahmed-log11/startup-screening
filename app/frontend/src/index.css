@@ -1,0 +1,38 @@
+@import "tailwindcss";
+
+/* Nawah design tokens: ink and lime, from the mockup. Use them as Tailwind classes,
+   e.g. bg-paper, text-ink, bg-lime, border-line, font-display. */
+@theme {
+  --color-ink: #0E1116;
+  --color-paper: #F6F6F2;
+  --color-lime: #C6F432;
+  --color-body: #3A3F4B;
+  --color-muted: #5B5F6B;
+  --color-line: #E4E4DD;
+  --color-field: #D9D9D1;
+  --color-soft: #F1F1EC;
+
+  /* Tier colors: background + text */
+  --color-strong-bg: #DCFCE7;
+  --color-strong: #166534;
+  --color-review-bg: #FEF3C7;
+  --color-review: #92400E;
+  --color-weak-bg: #FEE2E2;
+  --color-weak: #991B1B;
+  --color-wild-bg: #EDE9FE;
+  --color-wild: #5B21B6;
+
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-display: "Space Grotesk", "Inter", sans-serif;
+  --font-arabic: "IBM Plex Sans Arabic", system-ui, sans-serif;
+}
+
+body {
+  @apply bg-paper text-ink font-sans antialiased;
+}
+
+/* Arabic pages use the Arabic font everywhere, including headings. */
+[dir="rtl"] body,
+[dir="rtl"] .font-display {
+  font-family: var(--font-arabic);
+}
