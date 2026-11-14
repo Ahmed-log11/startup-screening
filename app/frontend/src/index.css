@@ -36,3 +36,14 @@ body {
 [dir="rtl"] .font-display {
   font-family: var(--font-arabic);
 }
+
+/* Tailwind resets the cursor on buttons; anything clickable shows the hand. */
+button:not(:disabled),
+select,
+input[type="checkbox"],
+[role="button"] {
+  cursor: pointer;
+}
+button:disabled {
+  cursor: not-allowed;
+}
