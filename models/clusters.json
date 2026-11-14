@@ -1,0 +1,32 @@
+{
+  "0": {
+    "name": "Three+ founders, founded 2013\u20132019",
+    "companies": 493,
+    "success_rate": 74.8,
+    "examples": [
+      "Hoss",
+      "Able",
+      "yBANQ"
+    ]
+  },
+  "1": {
+    "name": "Two founders, founded 2013\u20132019",
+    "companies": 1336,
+    "success_rate": 78.2,
+    "examples": [
+      "Whatnot",
+      "Ansa Biotechnologies",
+      "Ochre Bio"
+    ]
+  },
+  "2": {
+    "name": "Two founders, founded 2005\u20132012",
+    "companies": 730,
+    "success_rate": 63.0,
+    "examples": [
+      "OpenBiome",
+      "99minutos",
+      "Sequence Bio"
+    ]
+  }
+}
