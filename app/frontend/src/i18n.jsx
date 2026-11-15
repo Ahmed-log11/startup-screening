@@ -149,6 +149,15 @@ const DICT = {
     clear: "Clear",
     rowsSkipped: (n) => `${n} row${n > 1 ? "s" : ""} skipped:`,
     row: (n) => `Row ${n}`,
+    unnamedRow: (n) => `Unnamed (row ${n})`,
+    uploadError: (e) => {
+      const f = { num_founders: "founders", founded_year: "year", industry: "sector", region: "region" }[e.field] || e.field;
+      if (e.kind === "missing") return `${f} is missing`;
+      if (e.kind === "range") return `${f} must be between ${e.min} and ${e.max}`;
+      if (e.kind === "number") return `${f} must be a number`;
+      if (e.kind === "choice") return `unknown ${f} "${e.value}"`;
+      return e.message;
+    },
 
     // Company detail
     allCompanies: "All companies",
@@ -299,6 +308,15 @@ const DICT = {
     clear: "امسح",
     rowsSkipped: (n) => `تم تخطي ${n} ${n > 1 ? "صفوف" : "صف"}:`,
     row: (n) => `الصف ${n}`,
+    unnamedRow: (n) => `بدون اسم (الصف ${n})`,
+    uploadError: (e) => {
+      const f = { num_founders: "عدد المؤسسين", founded_year: "سنة التأسيس", industry: "القطاع", region: "المنطقة" }[e.field] || e.field;
+      if (e.kind === "missing") return `${f} فارغ`;
+      if (e.kind === "range") return `${f} يجب أن يكون بين ${e.min} و${e.max}`;
+      if (e.kind === "number") return `${f} يجب أن يكون رقماً`;
+      if (e.kind === "choice") return `${f} غير معروف "${e.value}"`;
+      return e.message;
+    },
 
     allCompanies: "كل الشركات",
     foundedIn: (y) => `تأسست ${y}`,

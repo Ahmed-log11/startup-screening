@@ -11,6 +11,29 @@ router = APIRouter(tags=["predict"])
 
 CSV_COLUMNS = ["name", "num_founders", "founded_year", "industry", "region"]
 MAX_ROWS = 500
+# Allowed ranges, same as StartupIn. Used to write short, clear error messages.
+RANGES = {"num_founders": (1, 10), "founded_year": (2000, 2030)}
+FIELD_NAMES = {"num_founders": "founders", "founded_year": "year", "industry": "sector", "region": "region", "name": "name"}
+
+
+def friendly_error(err: dict) -> dict:
+    """Turn a pydantic error into a short message, plus the parts the app needs to translate it."""
+    field = err["loc"][0] if err["loc"] else "row"
+    value = err.get("input")
+    label = FIELD_NAMES.get(field, field)
+    if value is None or err["type"] == "missing":
+        kind, message = "missing", f"{label} is missing"
+    elif field in RANGES and err["type"] in ("greater_than_equal", "less_than_equal"):
+        kind, message = "range", f"{label} must be between {RANGES[field][0]} and {RANGES[field][1]}"
+    elif field in RANGES:
+        kind, message = "number", f"{label} must be a number"
+    elif field in ("industry", "region"):
+        kind, message = "choice", f'unknown {label} "{value}"'
+    else:
+        kind, message = "other", f"{label}: {err['msg']}"
+    low, high = RANGES.get(field, (None, None))
+    return {"field": field, "kind": kind, "value": None if value is None else str(value),
+            "min": low, "max": high, "message": message}
 
 
 @router.post("/predict")
@@ -59,11 +82,10 @@ async def predict_batch(file: UploadFile = File(...)):
         try:
             startup = StartupIn(**row)
         except ValidationError as e:
-            first = e.errors()[0]
-            field = first["loc"][0] if first["loc"] else "row"
-            errors.append({"row": i, "name": row.get("name"), "message": f"{field}: {first['msg']}"})
+            errors.append({"row": i, "name": row.get("name"), **friendly_error(e.errors()[0])})
             continue
         items.append({
+            "row": i,  # row number in the uploaded file, for unnamed companies
             "name": startup.name,
             "num_founders": startup.num_founders,
             "founded_year": startup.founded_year,

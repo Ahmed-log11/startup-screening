@@ -143,7 +143,7 @@ function BatchResults({ batch, fileName, onClear }) {
       {batch.errors.length > 0 && (
         <ErrorNote>
           {t.rowsSkipped(batch.errors.length)}{" "}
-          {batch.errors.slice(0, 3).map((e) => `${t.row(e.row)}${e.name ? ` (${e.name})` : ""}: ${e.message}`).join(" · ")}
+          {batch.errors.slice(0, 3).map((e) => `${t.row(e.row)}${e.name ? ` (${e.name})` : ""}: ${t.uploadError(e)}`).join(" · ")}
         </ErrorNote>
       )}
       <div className="overflow-x-auto">
@@ -156,7 +156,7 @@ function BatchResults({ batch, fileName, onClear }) {
           <tbody>
             {batch.items.map((r, i) => (
               <tr key={i}>
-                <td className={`${td} font-semibold`}>{r.name || t.row(i + 1)}</td>
+                <td className={`${td} font-semibold`}>{r.name || t.unnamedRow(r.row)}</td>
                 <td className={`${td} whitespace-nowrap`}>{tv.industry(r.industry)}</td>
                 <td className={`${td} whitespace-nowrap`}>{tv.region(r.region)}</td>
                 <td className={td}><TypeCell row={r} /></td>

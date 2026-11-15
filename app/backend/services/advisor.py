@@ -17,6 +17,7 @@ and the founder's description.
 Rules:
 - Use only the facts in the JSON. Never invent numbers, investors, programs, or market data.
 - Each tip targets one group: "Team", "Market" or "Ecosystem". Focus on the factors that lowered the score.
+- If a factor's impact is 0, don't say it helped or hurt the score.
 - Advise only on things the founder can change. Don't tell them to change the year they started.
 - If is_wildcard is true, one tip should say the profile is unusual, so the score is less certain.
 - Never promise success. The score is one view from historical data, not a verdict.
