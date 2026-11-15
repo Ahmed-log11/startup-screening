@@ -23,4 +23,4 @@ def insights(body: InsightsIn):
         "region": body.region,
         "year_capped": body.year_capped,
     }
-    return get_advice(result, body.description, body.language)
+    return get_advice(result, body.description, body.language, body.founder_details())

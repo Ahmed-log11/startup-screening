@@ -99,6 +99,7 @@ export default function FounderResult() {
                   <H2>{t.whatIfTitle}</H2>
                   <span className="text-sm text-muted">{t.whatIfNote}</span>
                 </div>
+                {result.what_if.length === 0 && <p className="text-body">{t.whatIfNone}</p>}
                 {result.what_if.map((w) => (
                   <div key={w.change} className="flex items-center justify-between gap-3 rounded-2xl bg-paper px-4 py-3.5">
                     <span className="font-medium">{tv.change(w.change)}</span>

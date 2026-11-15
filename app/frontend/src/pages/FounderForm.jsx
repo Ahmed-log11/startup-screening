@@ -5,6 +5,47 @@ import { useLang } from "../i18n";
 import { ArrowIcon, Field, H1, Page, Select, inputClass } from "../components/ui";
 
 const FOUNDER_OPTIONS = [1, 2, 3, 4, 5];
+// Optional details: sent to the AI advisor only, never to the model (see app/backend/schemas.py).
+const PRODUCT_TYPES = ["saas", "b2b", "consumer", "marketplace", "e-commerce", "ai", "machine-learning",
+  "developer-tools", "analytics", "fintech", "healthcare", "health-services", "biotech", "education", "hardware"];
+const STAGES = ["idea", "mvp", "launched", "revenue"];
+const TRACTIONS = ["none", "1-100", "100-1000", "1000+"];
+const FUNDINGS = ["none", "friends-family", "angel", "seed-plus"];
+const MAX_PRODUCT_TYPES = 3;
+
+const EMPTY_EXTRAS = { product_types: [], stage: null, traction: null, funding: null };
+
+function Chip({ active, disabled, onClick, children }) {
+  return (
+    <button
+      type="button"
+      aria-pressed={active}
+      disabled={disabled}
+      onClick={onClick}
+      className={`min-h-10 rounded-full border px-3.5 text-sm font-medium ${
+        active ? "border-ink bg-ink text-lime" : "border-field bg-white text-ink"
+      } disabled:opacity-40`}
+    >
+      {children}
+    </button>
+  );
+}
+
+function ChoiceGroup({ legend, options, labels, value, onChange }) {
+  // single choice; clicking the selected chip again clears it (the field is optional)
+  return (
+    <fieldset className="flex flex-col gap-2">
+      <legend className="mb-2 text-sm font-semibold">{legend}</legend>
+      <div className="flex flex-wrap gap-2">
+        {options.map((o) => (
+          <Chip key={o} active={value === o} onClick={() => onChange(value === o ? null : o)}>
+            {labels[o]}
+          </Chip>
+        ))}
+      </div>
+    </fieldset>
+  );
+}
 
 export const LAST_STARTUP_KEY = "nawah:lastStartup";
 
@@ -12,10 +53,20 @@ export default function FounderForm() {
   const { t, tv } = useLang();
   const navigate = useNavigate();
   const saved = JSON.parse(sessionStorage.getItem(LAST_STARTUP_KEY) || "null");
-  const [form, setForm] = useState(
-    saved || { name: "", founded_year: YEARS[0], industry: "B2B", num_founders: 2, region: "Middle East", description: "" }
-  );
+  const [form, setForm] = useState({
+    name: "", founded_year: YEARS[0], industry: "B2B", num_founders: 2, region: "Middle East", description: "",
+    ...EMPTY_EXTRAS,
+    ...saved,
+  });
+  const [showMore, setShowMore] = useState(Boolean(saved?.product_types?.length || saved?.stage));
   const set = (key) => (value) => setForm((f) => ({ ...f, [key]: value }));
+  const toggleProduct = (type) =>
+    setForm((f) => ({
+      ...f,
+      product_types: f.product_types.includes(type)
+        ? f.product_types.filter((t) => t !== type)
+        : [...f.product_types, type].slice(0, MAX_PRODUCT_TYPES),
+    }));
 
   const submit = (e) => {
     e.preventDefault();
@@ -79,6 +130,49 @@ export default function FounderForm() {
                 className="resize-y rounded-xl border border-field bg-white px-3.5 py-3 text-ink outline-none focus:border-ink"
               />
             </Field>
+
+            <section className="flex flex-col gap-5 rounded-2xl bg-paper p-4 sm:p-5">
+              <button
+                type="button"
+                aria-expanded={showMore}
+                onClick={() => setShowMore((v) => !v)}
+                className="flex items-center justify-between gap-3 text-start"
+              >
+                <span className="flex flex-col">
+                  <span className="font-semibold">{t.moreTitle}</span>
+                  <span className="text-sm text-muted">{t.moreNote}</span>
+                </span>
+                <span aria-hidden="true" className="text-xl font-semibold">{showMore ? "−" : "+"}</span>
+              </button>
+
+              {showMore && (
+                <>
+                  <fieldset className="flex flex-col gap-2">
+                    <legend className="mb-2 text-sm font-semibold">
+                      {t.fProduct} <span className="font-normal text-muted">{t.fProductHint}</span>
+                    </legend>
+                    <div className="flex flex-wrap gap-2">
+                      {PRODUCT_TYPES.map((type) => {
+                        const active = form.product_types.includes(type);
+                        return (
+                          <Chip
+                            key={type}
+                            active={active}
+                            disabled={!active && form.product_types.length >= MAX_PRODUCT_TYPES}
+                            onClick={() => toggleProduct(type)}
+                          >
+                            {t.productTypes[type]}
+                          </Chip>
+                        );
+                      })}
+                    </div>
+                  </fieldset>
+                  <ChoiceGroup legend={t.fStage} options={STAGES} labels={t.stages} value={form.stage} onChange={set("stage")} />
+                  <ChoiceGroup legend={t.fTraction} options={TRACTIONS} labels={t.tractions} value={form.traction} onChange={set("traction")} />
+                  <ChoiceGroup legend={t.fFunding} options={FUNDINGS} labels={t.fundings} value={form.funding} onChange={set("funding")} />
+                </>
+              )}
+            </section>
 
             <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
               <Link to="/" className="font-medium text-body">{t.back}</Link>

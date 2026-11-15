@@ -10,6 +10,7 @@ from pathlib import Path
 import joblib
 import numpy as np
 import pandas as pd
+from sklearn.metrics import pairwise_distances_argmin_min
 
 MODELS_DIR = Path(__file__).parent
 
@@ -41,6 +42,18 @@ def assign_cluster(startup: dict) -> dict:
         "similar": info["examples"],
         "is_wildcard": bool(nearest_core > _dbscan_core["eps"]),
     }
+
+
+def assign_clusters(df: pd.DataFrame) -> pd.DataFrame:
+    """Same as assign_cluster, for many startups at once (used to score the whole investor list fast)."""
+    x = _preprocessor.transform(df[FEATURE_COLUMNS])
+    x = x.toarray() if hasattr(x, "toarray") else x
+    ids = _kmeans.predict(x)
+    _, nearest_core = pairwise_distances_argmin_min(x, _dbscan_core["core_points"])
+    return pd.DataFrame({
+        "cluster": [_clusters[str(int(i))]["name"] for i in ids],
+        "is_wildcard": nearest_core > _dbscan_core["eps"],
+    })
 
 
 if __name__ == "__main__":

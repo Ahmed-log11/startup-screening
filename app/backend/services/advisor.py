@@ -20,11 +20,18 @@ Rules:
 - Advise only on things the founder can change. Don't tell them to change the year they started.
 - If is_wildcard is true, one tip should say the profile is unusual, so the score is less certain.
 - Never promise success. The score is one view from historical data, not a verdict.
+- The JSON may include "founder_details": optional, self-reported answers (product type, stage,
+  users or customers, funding raised). Use them to make the tips specific to this startup, but they
+  are NOT part of the score: never say they raised or lowered it.
 - Plain, direct language. title: at most 8 words. detail: at most 35 words.
 - Write in {language}.
 
 Reply with ONLY a JSON array, no other text:
 [{"tag": "Team|Market|Ecosystem", "title": "...", "detail": "..."}, ...]"""
+
+INDUSTRY_AR = {"B2B": "خدمات الشركات", "Consumer": "منتجات المستهلكين", "Fintech": "التقنية المالية",
+               "Healthcare": "الرعاية الصحية", "Education": "التعليم", "Industrials": "الصناعة",
+               "Real Estate": "العقار", "Other": "قطاعك"}
 
 LANGUAGES = {"en": "English", "ar": "Arabic (simple Modern Standard Arabic)"}
 
@@ -37,9 +44,9 @@ def _rules_advice(result: dict, language: str) -> list[dict]:
 
     if founders <= 1:
         tips.append({"tag": "Team",
-                     "title": "أضف شريكاً مؤسساً" if ar else "Add a co-founder",
-                     "detail": "الشركات بمؤسسَين أو أكثر حققت نتائج أفضل في البيانات." if ar
-                     else "Startups with two or more founders did better in the data than solo founders."})
+                     "title": "غطِّ المهارات الناقصة" if ar else "Cover the skills you lack",
+                     "detail": "المؤسسون المنفردون نجحوا تقريباً بنفس نسبة الفرق في البيانات. المهم أن تغطي المنتج والمبيعات بموظف أو مستشار." if ar
+                     else "Solo founders did about as well as teams in the data. What matters is covering product and sales, through a hire or an advisor."})
     else:
         tips.append({"tag": "Team",
                      "title": "وضّح أدوار الفريق" if ar else "Make team roles clear",
@@ -48,7 +55,7 @@ def _rules_advice(result: dict, language: str) -> list[dict]:
 
     tips.append({"tag": "Market",
                  "title": "ركّز على مشكلة واضحة" if ar else "Lead with a clear problem",
-                 "detail": f"في مجال {result.get('industry', '')}، اعرض المشكلة التي تحلها قبل المزايا." if ar
+                 "detail": f"في مجال {INDUSTRY_AR.get(result.get('industry'), 'قطاعك')}، اعرض المشكلة التي تحلها قبل المزايا." if ar
                  else f"In {result.get('industry', 'your industry')}, show the problem you solve before the features."})
 
     if result.get("is_wildcard"):
@@ -90,13 +97,16 @@ def _ai_advice(payload: str, language: str) -> tuple:
     return tuple(json.dumps(t, ensure_ascii=False) for t in clean)
 
 
-def get_advice(result: dict, description: str | None, language: str = "en") -> dict:
+def get_advice(result: dict, description: str | None, language: str = "en",
+               founder_details: dict | None = None) -> dict:
     """Returns {"source": "ai" | "rules", "advice": [...]}."""
     if os.getenv("ANTHROPIC_API_KEY"):
         facts = {k: result.get(k) for k in (
             "score", "tier", "factors", "what_if", "cluster", "cluster_success_rate",
             "similar", "is_wildcard", "num_founders", "industry", "region", "year_capped")}
         facts["description"] = description or ""
+        if founder_details:
+            facts["founder_details"] = founder_details
         try:
             tips = _ai_advice(json.dumps(facts, ensure_ascii=False, sort_keys=True), language)
             return {"source": "ai", "advice": [json.loads(t) for t in tips]}

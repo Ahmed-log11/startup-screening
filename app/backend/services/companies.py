@@ -6,11 +6,9 @@ from pathlib import Path
 
 import pandas as pd
 
-from app.backend.schemas import LATEST_TRAINED_YEAR
-from models.predict import predict
+from models.predict import predict_many
 
 DATA_PATH = Path(__file__).resolve().parents[3] / "data" / "processed" / "yc_clean.csv"
-FEATURES = ["num_founders", "founded_year", "industry", "region"]
 
 
 @lru_cache(maxsize=1)
@@ -19,16 +17,10 @@ def load_companies() -> pd.DataFrame:
     df["id"] = df.index
     df["short_description"] = df["short_description"].fillna("")
 
-    results = []
-    for row in df[FEATURES].to_dict(orient="records"):
-        row["founded_year"] = min(int(row["founded_year"]), LATEST_TRAINED_YEAR)
-        results.append(predict(row))
-
-    scored = pd.DataFrame(results)
-    df["score"] = scored["score"]
-    df["tier"] = scored["tier"]
-    df["cluster"] = scored["cluster"]
-    df["is_wildcard"] = scored["is_wildcard"]
+    # All companies in one batch: a few seconds instead of a minute on the free server.
+    scored = predict_many(df)
+    for col in ["score", "tier", "cluster", "is_wildcard"]:
+        df[col] = scored[col].values
     return df.sort_values("score", ascending=False).reset_index(drop=True)
 
 

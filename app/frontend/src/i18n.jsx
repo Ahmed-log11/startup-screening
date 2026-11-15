@@ -64,6 +64,23 @@ const DICT = {
     ],
     whyNotTeam: "Why not team size?",
     whyNotTeamText: "Team size reflects how a company ended up, not its potential, so the model leaves it out.",
+    moreTitle: "More about your startup",
+    moreNote: "Optional · used for the advice only, not for the score",
+    fProduct: "What best describes your product?",
+    fProductHint: "(pick up to 3)",
+    fStage: "Stage",
+    fTraction: "Users or customers",
+    fFunding: "Funding raised so far",
+    productTypes: {
+      saas: "Software subscription (SaaS)", b2b: "Sells to businesses", consumer: "Sells to consumers",
+      marketplace: "Marketplace", "e-commerce": "Online store", ai: "AI", "machine-learning": "Machine learning",
+      "developer-tools": "Tools for developers", analytics: "Data & analytics", fintech: "Payments & finance",
+      healthcare: "Healthcare", "health-services": "Health services for people", biotech: "Biotech",
+      education: "Education", hardware: "Hardware / physical product",
+    },
+    stages: { idea: "Idea", mvp: "First version (MVP)", launched: "Launched", revenue: "Making revenue" },
+    tractions: { none: "None yet", "1-100": "1–100", "100-1000": "100–1,000", "1000+": "1,000+" },
+    fundings: { none: "None", "friends-family": "Family & friends", angel: "Angel investor", "seed-plus": "Seed or more" },
 
     // Founder result
     step2: "Step 2 of 2",
@@ -73,7 +90,7 @@ const DICT = {
     unusualTitle: "Your profile is unusual",
     unusualText: "It doesn't match any group of past startups, so the score is less certain. Unusual can mean risky, or it can mean a standout.",
     scoreExplain: "How startups with a profile like yours have done historically, out of 100.",
-    tierScale: "70+ strong · 40–69 needs review · under 40 weak",
+    tierScale: "81+ strong · 65–80 needs review · under 65 weak (top 30% / bottom 20% of past startups)",
     yearCapped: (y) => `Scored as a recent startup: the model learned from companies founded up to ${y}.`,
     yourType: "Your startup type",
     groupSucceeded: "of startups in this group succeeded",
@@ -82,6 +99,7 @@ const DICT = {
     pointsNote: "Points added or removed",
     whatIfTitle: "What if you changed one thing?",
     whatIfNote: "Only things you can control",
+    whatIfNone: "No single change raises your score: your profile is already close to its best for this model.",
     adviceTitle: (name) => (name ? `Advice for ${name}` : "Advice"),
     adviceAi: "Written by an AI advisor from your factors",
     adviceRules: "Based on your factors",
@@ -198,6 +216,23 @@ const DICT = {
     ],
     whyNotTeam: "لماذا لا نستخدم حجم الفريق؟",
     whyNotTeamText: "حجم الفريق يعكس ما وصلت إليه الشركة لاحقاً لا إمكاناتها، لذلك لا يستخدمه النموذج.",
+    moreTitle: "تفاصيل أكثر عن شركتك",
+    moreNote: "اختياري · تُستخدم للنصائح فقط، ولا تدخل في الدرجة",
+    fProduct: "ما أقرب وصف لمنتجك؟",
+    fProductHint: "(اختر حتى 3)",
+    fStage: "المرحلة",
+    fTraction: "المستخدمون أو العملاء",
+    fFunding: "التمويل حتى الآن",
+    productTypes: {
+      saas: "برنامج باشتراك (SaaS)", b2b: "يبيع للشركات", consumer: "يبيع للأفراد",
+      marketplace: "منصة تجمع البائع والمشتري", "e-commerce": "متجر إلكتروني", ai: "ذكاء اصطناعي",
+      "machine-learning": "تعلّم الآلة", "developer-tools": "أدوات للمطورين", analytics: "بيانات وتحليلات",
+      fintech: "مدفوعات ومالية", healthcare: "رعاية صحية", "health-services": "خدمات صحية للأفراد",
+      biotech: "تقنية حيوية", education: "تعليم", hardware: "جهاز أو منتج مادي",
+    },
+    stages: { idea: "فكرة", mvp: "نسخة أولى (MVP)", launched: "أطلقنا", revenue: "عندنا إيرادات" },
+    tractions: { none: "لا يوجد بعد", "1-100": "1–100", "100-1000": "100–1,000", "1000+": "1,000+" },
+    fundings: { none: "لا يوجد", "friends-family": "العائلة والأصدقاء", angel: "مستثمر ملائكي", "seed-plus": "جولة Seed أو أكثر" },
 
     step2: "الخطوة 2 من 2",
     resultTitle: (name) => (name ? `${name}، هذه نتيجتك` : "هذه نتيجتك"),
@@ -206,7 +241,7 @@ const DICT = {
     unusualTitle: "ملف شركتك غير مألوف",
     unusualText: "لا يشبه أي مجموعة من الشركات السابقة، لذلك الدرجة أقل يقيناً. غير المألوف قد يعني مخاطرة، وقد يعني تميّزاً.",
     scoreExplain: "كيف كان أداء الشركات المشابهة لشركتك تاريخياً، من 100.",
-    tierScale: "70+ قوي · 40–69 يحتاج مراجعة · أقل من 40 ضعيف",
+    tierScale: "81+ قوي · 65–80 يحتاج مراجعة · أقل من 65 ضعيف (أعلى 30% وأقل 20% من الشركات السابقة)",
     yearCapped: (y) => `قُيّمت كشركة حديثة: تعلّم النموذج من شركات تأسست حتى ${y}.`,
     yourType: "نوع شركتك",
     groupSucceeded: "من شركات هذه المجموعة نجحت",
@@ -215,6 +250,7 @@ const DICT = {
     pointsNote: "نقاط مضافة أو مخصومة",
     whatIfTitle: "ماذا لو غيّرت شيئاً واحداً؟",
     whatIfNote: "أشياء بيدك فقط",
+    whatIfNone: "لا يوجد تغيير واحد يرفع درجتك: ملفك قريب من أفضل حالاته في هذا النموذج.",
     adviceTitle: (name) => (name ? `نصائح لـ ${name}` : "نصائح"),
     adviceAi: "كتبها مستشار ذكاء اصطناعي بناءً على عواملك",
     adviceRules: "مبنية على عواملك",
@@ -317,6 +353,7 @@ function factorLabel(factorName, lang, tv) {
   if ((m = /^(\d+) founder\(s\)$/.exec(factorName))) return lang === "ar" ? arFounders(+m[1]) : enFounders(+m[1]);
   if ((m = /^(.+) industry$/.exec(factorName))) return lang === "ar" ? `قطاع ${tv.industry(m[1])}` : `${m[1]} industry`;
   if ((m = /^Region: (.+)$/.exec(factorName))) return lang === "ar" ? `المنطقة: ${tv.region(m[1])}` : factorName;
+  if ((m = /^Founded (\d{4})$/.exec(factorName))) return lang === "ar" ? `تأسست ${m[1]}` : factorName;
   return factorName;
 }
 
@@ -328,7 +365,12 @@ function makeTv(lang) {
     region: pick("region"),
     group: pick("group"),
     status: pick("status"),
-    change: pick("change"),
+    change: (v) => {
+      // "Shift focus to Fintech" comes from models/predict.py
+      const m = /^Shift focus to (.+)$/.exec(v || "");
+      if (m && lang === "ar") return `التركيز على قطاع ${VALUES.ar.industry[m[1]] || m[1]}`;
+      return VALUES[lang]?.change?.[v] ?? v;
+    },
     cluster: (v) => clusterLabel(v, lang),
   };
   tv.factor = (v) => factorLabel(v, lang, tv);

@@ -34,7 +34,7 @@ export default function Landing() {
               <TierBadge tier="Strong signal" large />
             </div>
             <div className="flex items-center gap-6">
-              <ScoreRing score={74} size={132} />
+              <ScoreRing score={84} size={132} />
               <div className="min-w-0 flex-1 text-sm">
                 <FactorList factors={SAMPLE_FACTORS} />
               </div>
