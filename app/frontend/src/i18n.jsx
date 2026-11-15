@@ -333,17 +333,15 @@ const VALUES = {
   },
 };
 
-const FOUNDER_WORDS = { One: 1, Two: 2, "Three+": 3 };
-
 function clusterLabel(name, lang) {
-  // Backend names look like "Two founders, founded 2013–2019".
-  const m = /^(One|Two|Three\+) founders?, founded (\d{4})–(\d{4})$/.exec(name || "");
+  // Backend names look like "1–2 founders, founded 2013–2019" (from models/clusters.json).
+  const m = /^(1–2|3\+) founders, founded (\d{4})–(\d{4})$/.exec(name || "");
   if (!m) return name;
   const [, who, from, to] = m;
   const recent = to === "2019"; // the newest era: today's startups are compared with it
-  if (lang === "en") return recent ? `${who} founder${who === "One" ? "" : "s"}, founded ${from} or later` : name;
-  const n = FOUNDER_WORDS[who];
-  const whoAr = n === 3 ? "ثلاثة مؤسسين فأكثر" : arFounders(n);
+  const whoEn = `${who} founders`;
+  const whoAr = who === "3+" ? "ثلاثة مؤسسين فأكثر" : "مؤسس أو مؤسسان";
+  if (lang === "en") return `${whoEn}, founded ${recent ? `${from} or later` : `${from}–${to}`}`;
   return `${whoAr}، ${recent ? `تأسست ${from} أو بعدها` : `تأسست ${from}–${to}`}`;
 }
 

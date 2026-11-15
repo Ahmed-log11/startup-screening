@@ -40,7 +40,7 @@ export default function Landing() {
               </div>
             </div>
             <p className="rounded-xl bg-paper px-3.5 py-3 text-sm text-body">
-              {t.sampleType} <strong className="text-ink">{tv.cluster("Two founders, founded 2013–2019")}</strong> · {t.sampleSuccess(78)}
+              {t.sampleType} <strong className="text-ink">{tv.cluster("1–2 founders, founded 2013–2019")}</strong> · {t.sampleSuccess(78)}
             </p>
           </div>
         </section>
